@@ -45,7 +45,6 @@ function modifier() {
     appelAjax({
         url: 'ajax/modifier.php',
         data: {
-            primaryKey: data.id,
             columns: {
                 telephone: telephone.value === '' ? null : telephone.value,
                 autMail: autMail.checked ? '1' : '0'

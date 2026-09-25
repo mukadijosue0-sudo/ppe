@@ -37,6 +37,11 @@
     {
         "controle": "Photos des membres",
         "repertoire": "../../public/data/photomembre",
+        "fichier": "logo.png"
+    },
+    {
+        "controle": "Photos des membres",
+        "repertoire": "../../public/data/photomembre",
         "fichier": "peronne.png"
     },
     {
