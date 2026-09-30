@@ -16,6 +16,10 @@
     {
       "label": "Les Parcours",
       "href": "/4saisons/parcours"
+    },
+    {
+      "label": "Résultats Courses",
+      "href": "/4saisons/consultaion"
     }
   ]
 }

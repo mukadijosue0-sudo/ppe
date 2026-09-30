@@ -1,0 +1,69 @@
+<style>
+    /* ==========================================================
+       Consultation des résultats et du palmarès
+       ========================================================== */
+
+    #listeCoureurs {
+        max-height: 260px;
+        overflow-y: auto;
+    }
+
+    #listeCoureurs .list-group-item {
+        cursor: pointer;
+    }
+
+    #resultatsCoureur table,
+    #tablePalmares {
+        width: 100%;
+    }
+
+    #tablePalmares th,
+    #resultatsCoureur th {
+        white-space: nowrap;
+    }
+</style>
+
+<h1 class="page-title">Résultats et palmarès</h1>
+
+<!-- ========================================================== -->
+<!-- Recherche d'un coureur -->
+<!-- ========================================================== -->
+<section class="card mb-3">
+    <div class="card-header">Retrouver les résultats d'un coureur</div>
+    <div class="card-body">
+
+        <label for="rechercheNom" class="form-label">
+            Saisissez les premières lettres du nom
+        </label>
+        <input type="text"
+               id="rechercheNom"
+               class="form-control"
+               placeholder="Ex. : Dup..."
+               autocomplete="off">
+
+        <ul id="listeCoureurs" class="list-group mt-2"></ul>
+
+        <div id="resultatsCoureur" class="mt-3"></div>
+
+    </div>
+</section>
+
+<!-- ========================================================== -->
+<!-- Palmarès -->
+<!-- ========================================================== -->
+<section class="card">
+    <div class="card-header">Palmarès (nombre de victoires)</div>
+    <div class="card-body">
+        <table class="table" id="tablePalmares">
+            <thead>
+            <tr>
+                <th>Rang</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Victoires</th>
+            </tr>
+            </thead>
+            <tbody id="lignesPalmares"></tbody>
+        </table>
+    </div>
+</section>

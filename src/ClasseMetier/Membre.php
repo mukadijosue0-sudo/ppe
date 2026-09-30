@@ -6,11 +6,10 @@ namespace ClasseMetier;
 use ClasseTechnique\ColumnEmail;
 use ClasseTechnique\ColumnInt;
 use ClasseTechnique\ColumnText;
-use ClasseTechnique\Database;
 use ClasseTechnique\Select;
 use ClasseTechnique\Table;
 use ClasseTechnique\TextCase;
-use ClasseTechnique\UserException;
+
 
 /**
  * Classe métier représentant un membre.
