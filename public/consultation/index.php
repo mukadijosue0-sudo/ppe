@@ -10,4 +10,5 @@ require $_SERVER['DOCUMENT_ROOT'] . "/../bootstrap/bootstrap.php";
 $page = new Page();
 
 $page->setTitre("Résultats et palmarès")
+    ->avecJeton()
     ->afficher();
