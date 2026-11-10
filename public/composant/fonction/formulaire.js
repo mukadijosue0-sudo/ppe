@@ -2,12 +2,87 @@
 
 'use strict';
 
-// Version 2026.4
-// Date version : 06/09/2026
+// Version 2026.6
+// Date version : 27/10/2026
 
 // Import de fonctions utilitaires depuis un module externe
 
 import {afficherSousLeChamp, messageBox} from './afficher.js';
+
+
+/**
+ * Injection unique des styles CSS du composant groupe-fichier
+ */
+function injecterStylesGroupeFichier() {
+    if (document.getElementById('style-groupe-fichier')) return;
+
+    const style = document.createElement('style');
+    style.id = 'style-groupe-fichier';
+    style.textContent = `
+        .groupe-fichier {
+            display: flex;
+            align-items: stretch;
+            width: 100%;
+            height: var(--champ-height, 42px);
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border: 1px solid var(--champ-border, #ced4da);
+            border-radius: var(--champ-radius, 8px);
+            background-color: var(--champ-background, #fff);
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .groupe-fichier:hover {
+            border-color: #adb5bd;
+        }
+        .groupe-fichier:focus-within {
+            border-color: var(--champ-focus, #1769aa);
+            box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.2);
+        }
+        .groupe-fichier button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-right: 1px solid var(--champ-border, #ced4da);
+            border-radius: 0;
+            padding: 0 1rem;
+            background-color: #f1f3f5;
+            color: #495057;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+        .groupe-fichier button:hover {
+            background-color: #e2e6ea;
+            color: #212529;
+        }
+        .groupe-fichier span {
+            display: flex;
+            align-items: center;
+            flex: 1 1 auto;
+            width: 100%;
+            min-width: 0;
+            padding: 0 0.85rem;
+            background-color: #fff;
+            color: #212529;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+        .groupe-fichier span:empty::before {
+            content: "Aucun fichier choisi (cliquer ou glisser-déposer)";
+            color: #6c757d;
+            font-style: italic;
+        }
+    `;
+    document.head.appendChild(style);
+}
 
 /**
  * Prépare dynamiquement le DOM en insérant une div.messageErreur après chaque champ de saisie.
@@ -76,6 +151,40 @@ export function configurerFormulaire() {
             conteneurChamp.insertAdjacentElement('afterend', divMessage);
         } else {
             element.insertAdjacentElement('afterend', divMessage);
+        }
+    }
+
+    // mise en forme des balises <button>
+    // 1. Définition explicite du type "button" sur tous les boutons pour éviter
+    // tout comportement inattendu de soumission
+    const lesBoutons = document.querySelectorAll('button:not([type])');
+    for (const bouton of lesBoutons) {
+        bouton.type = 'button';
+    }
+
+    // 2. Uniformisation de TOUS les boutons dont l'id commence par "btn"
+    const boutonsAction = document.querySelectorAll('button[id^="btn"], a[id^="btn"].btn');
+    for (const btn of boutonsAction) {
+        btn.style.display = 'block';
+        btn.style.width = '100%';
+        btn.style.backgroundColor = '#dc3545'; // Rouge (ou tu peux adapter selon le rôle)
+        btn.style.color = '#ffffff';          // Texte blanc
+        btn.style.border = 'none';
+        btn.style.borderRadius = '0.375rem';  // Arrondi (6px)
+        btn.style.padding = '0.5rem 1rem';    // Espacement interne
+        btn.style.cursor = 'pointer';
+        btn.style.textAlign = 'center';       // Utile si c'est un lien <a> stylisé en bouton
+    }
+
+    // 3. Transformation automatique des conteneurs .groupe-fichier s'ils existent dans le HTML
+    const groupesFichier = document.querySelectorAll('.groupe-fichier');
+    if (groupesFichier.length > 0) {
+        injecterStylesGroupeFichier();
+        for (const groupe of groupesFichier) {
+            const btn = groupe.querySelector('button');
+            if (btn && !btn.textContent.trim()) {
+                btn.textContent = '📁 Choisir un fichier';
+            }
         }
     }
 }
@@ -264,7 +373,7 @@ export function effacerLesErreurs(zone = document) {
     }
     const msg = document.getElementById('msg');
     if (msg) {
-        msg.innerHTML = '';
+        msg.replaceChildren();
     }
 }
 

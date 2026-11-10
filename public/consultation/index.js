@@ -14,6 +14,13 @@ const rechercheNom = document.getElementById("rechercheNom");
 const listeCoureurs = document.getElementById("listeCoureurs");
 const resultatsCoureur = document.getElementById("resultatsCoureur");
 const lignesPalmares = document.getElementById("lignesPalmares");
+const filtreSexe = document.getElementById("filtreSexe");
+const filtreDistance = document.getElementById("filtreDistance");
+const filtreSaison = document.getElementById("filtreSaison");
+const filtreAnnee = document.getElementById("filtreAnnee");
+
+// Première année des courses (1983) jusqu'à l'année en cours
+const premiereAnnee = 1983;
 
 // Délai (ms) avant de lancer la recherche après la dernière frappe
 const delaiRecherche = 300;
@@ -39,6 +46,11 @@ rechercheNom.addEventListener("input", () => {
     minuteurRecherche = setTimeout(() => rechercherCoureurs(prefixe), delaiRecherche);
 });
 
+// Rechargement du palmarès quand on change un filtre
+filtreSexe.addEventListener("change", chargerPalmares);
+filtreDistance.addEventListener("change", chargerPalmares);
+filtreSaison.addEventListener("change", chargerPalmares);
+filtreAnnee.addEventListener("change", chargerPalmares);
 // -----------------------------------------------------------------------------------
 // Fonctions de traitement
 // -----------------------------------------------------------------------------------
@@ -136,12 +148,31 @@ function construireTableauResultats(lesResultats) {
 }
 
 /**
+ * Remplit la liste des années, de la plus récente à la plus ancienne.
+ */
+function remplirAnnees() {
+    const anneeCourante = new Date().getFullYear();
+    for (let annee = anneeCourante; annee >= premiereAnnee; annee--) {
+        const option = document.createElement("option");
+        option.value = annee;
+        option.textContent = annee;
+        filtreAnnee.appendChild(option);
+    }
+}
+
+/**
  * Charge le palmarès en Ajax et l'affiche.
  */
 function chargerPalmares() {
     appelAjax({
         url: "ajax/ajax.php",
-        data: {action: "palmares"},
+        data: {
+            action: "palmares",
+            sexe: filtreSexe.value,
+            distance: filtreDistance.value,
+            saison: filtreSaison.value,
+            annee: filtreAnnee.value
+        },
         success: (lesPalmares) => afficherPalmares(lesPalmares)
     });
 }
@@ -167,4 +198,5 @@ function afficherPalmares(lesPalmares) {
 // Programme principal
 // -----------------------------------------------------------------------------------
 
+remplirAnnees();
 chargerPalmares();

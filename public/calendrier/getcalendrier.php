@@ -67,11 +67,11 @@ if ($html === false) {
     echo "HTTP code : " . curl_getinfo($ch, CURLINFO_HTTP_CODE) . "\n";
     echo '</pre>';
 
-    curl_close($ch);
+
     exit;
 }
 
-curl_close($ch);
+
 
 if (!$html) {
     echo "<p>Erreur de chargement du calendrier.</p>";

@@ -7,7 +7,7 @@
 import {appelAjax} from "/composant/fonction/ajax.js";
 import {configurerFormulaire, donneesValides } from "/composant/fonction/formulaire.js";
 import {afficherToast} from "/composant/fonction/afficher.js";
-import {getData} from "/composant/fonction/data.js";
+import {getData} from "/composant/fonction/page.js";
 
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales

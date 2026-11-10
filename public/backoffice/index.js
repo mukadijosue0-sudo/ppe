@@ -4,7 +4,7 @@
 // Import des fonctions nécessaires
 // -----------------------------------------------------------------------------------
 
-import {getData} from "/composant/fonction/data.js";
+import {getData} from "/composant/fonction/page.js";
 
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales

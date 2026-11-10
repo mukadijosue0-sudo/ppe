@@ -2,8 +2,8 @@
 
 "use strict";
 
-// Version 2026.5
-// Date version : 13/09/2026
+// Version 2026.6
+// Date version : 21/10/2026
 // Lecture du token CSRF depuis la balise <meta name="csrf-token"> injectée par interface.php
 // Le token est envoyé automatiquement dans le header X-CSRF-Token sur chaque requête POST
 
@@ -305,18 +305,29 @@ export async function appelAjaxSimple({url, success}) {
         }
 
         const reponse = await response.json();
+
         if (reponse.error) {          // erreur globale (exception)
             messageBox(reponse.error, 'error');
             return true;
         }
 
         if (reponse.errors) {
+            // Si "errors" est un tableau (cas de l'API externe)
+            if (Array.isArray(reponse.errors)) {
+                const premierElement = reponse.errors[0];
+                if (premierElement) {
+                    const messageErreur = premierElement.description || premierElement.text || "Erreur renvoyée par l'API externe.";
+                    messageBox(messageErreur, 'error');
+                }
+                return null;
+            }
+
+            // Sinon, si "errors" est un objet classique de validation (votre application)
             for (const key in reponse.errors) {
                 const message = reponse.errors[key];
                 if (key === 'system') {
                     messageBox('Une erreur est survenue, veuillez consulter le journal des erreurs pour en savoir plus', 'error');
                 } else if (key === 'global') {
-                    // Affichage d'un message d'erreur global dans la div avec l'ID 'msg' si elle existe ou dans une fenêtre modale sinon
                     const msg = document.getElementById('msg');
                     if (msg) {
                         msg.innerText = message;
@@ -328,7 +339,6 @@ export async function appelAjaxSimple({url, success}) {
                         messageBox(message, 'error');
                     }
                 } else {
-                    // Affichage d'une erreur de saisie pour un champ spécifique : le message est affiché sous le champ
                     afficherSousLeChamp(key, message);
                 }
             }

@@ -1,69 +1,274 @@
 <style>
-    /* ==========================================================
-       Consultation des résultats et du palmarès
-       ========================================================== */
+    /* Consultation des résultats et du palmarès
+       Toutes les règles sont limitées à #consultation
+       pour ne pas modifier l'en-tête ni le menu du site. */
 
-    #listeCoureurs {
+    :root {
+        --asphalte: #1d2733;
+        --piste: #1f5fbf;
+        --piste-clair: #e8f0fc;
+        --dossard: #ffd23f;
+        --papier: #f6f7f5;
+        --trait: #d9ddd8;
+        --texte-doux: #5b6673;
+    }
+
+    #consultation .page-title {
+        color: var(--asphalte);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        padding-bottom: .5rem;
+        border-bottom: 4px solid var(--dossard);
+        display: inline-block;
+        margin-bottom: 1.5rem;
+    }
+
+    #consultation .card {
+        border: 1px solid var(--trait);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: none;
+    }
+
+    #consultation .card-header {
+        background: var(--asphalte);
+        color: #fff;
+        font-weight: 600;
+        border-bottom: 0;
+        padding: .85rem 1.25rem;
+    }
+
+    #consultation .card-body {
+        background: var(--papier);
+        padding: 1.25rem;
+    }
+
+    #consultation .form-label {
+        font-weight: 600;
+        color: var(--asphalte);
+    }
+
+    #consultation .form-control,
+    #consultation .form-select {
+        border: 1px solid var(--trait);
+        border-radius: 8px;
+        padding: .6rem .8rem;
+    }
+
+    #consultation .form-control:focus,
+    #consultation .form-select:focus {
+        border-color: var(--piste);
+        box-shadow: 0 0 0 3px rgba(31, 95, 191, .2);
+    }
+
+    #consultation #listeCoureurs {
         max-height: 260px;
         overflow-y: auto;
+        border: 1px solid var(--trait);
+        border-radius: 8px;
     }
 
-    #listeCoureurs .list-group-item {
+    #consultation #listeCoureurs:empty {
+        display: none;
+    }
+
+    #consultation #listeCoureurs .list-group-item {
         cursor: pointer;
+        border: 0;
+        border-bottom: 1px solid var(--trait);
+        border-left: 4px solid transparent;
+        transition: background-color .15s, border-color .15s;
     }
 
-    #resultatsCoureur table,
-    #tablePalmares {
+    #consultation #listeCoureurs .list-group-item:last-child {
+        border-bottom: 0;
+    }
+
+    #consultation #listeCoureurs .list-group-item:hover,
+    #consultation #listeCoureurs .list-group-item:focus {
+        background: var(--piste-clair);
+        border-left-color: var(--piste);
+    }
+
+    #consultation #resultatsCoureur table,
+    #consultation #tablePalmares {
         width: 100%;
+        background: #fff;
+        border: 1px solid var(--trait);
+        border-radius: 8px;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-variant-numeric: tabular-nums;
     }
 
-    #tablePalmares th,
-    #resultatsCoureur th {
+    #consultation #tablePalmares th,
+    #consultation #resultatsCoureur th {
         white-space: nowrap;
+        background: var(--piste-clair);
+        color: var(--asphalte);
+        font-weight: 600;
+        border-bottom: 2px solid var(--piste);
+        padding: .65rem .75rem;
     }
+
+    #consultation #tablePalmares td,
+    #consultation #resultatsCoureur td {
+        padding: .6rem .75rem;
+        border-bottom: 1px solid var(--trait);
+        vertical-align: middle;
+    }
+
+    #consultation #tablePalmares tbody tr:last-child td,
+    #consultation #resultatsCoureur tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    #consultation #resultatsCoureur tbody tr:hover,
+    #consultation #lignesPalmares tr:hover {
+        background: var(--piste-clair);
+    }
+
+    #consultation #lignesPalmares td:first-child {
+        width: 4.5rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--asphalte);
+    }
+
+    #consultation #lignesPalmares td:first-child::before {
+        content: "";
+    }
+
+    #consultation #lignesPalmares td:first-child {
+        background: var(--papier);
+        border-right: 1px solid var(--trait);
+    }
+
+    #consultation #lignesPalmares tr:nth-child(1) td:first-child {
+        background: var(--dossard);
+        box-shadow: inset 0 0 0 2px var(--asphalte);
+    }
+
+    #consultation #lignesPalmares tr:nth-child(2) td:first-child,
+    #consultation #lignesPalmares tr:nth-child(3) td:first-child {
+        background: #fff3c4;
+    }
+
+    #consultation #lignesPalmares td:last-child {
+        font-weight: 700;
+        color: var(--piste);
+        text-align: right;
+    }
+
+    #consultation #tablePalmares th:last-child {
+        text-align: right;
+    }
+
+    @media (max-width: 575.98px) {
+        #consultation .card-body {
+            padding: .9rem;
+        }
+
+        #consultation #tablePalmares td,
+        #consultation #tablePalmares th,
+        #consultation #resultatsCoureur td,
+        #consultation #resultatsCoureur th {
+            padding: .5rem .45rem;
+            font-size: .9rem;
+        }
+
+        #consultation #resultatsCoureur {
+            overflow-x: auto;
+        }
+
+    }
+
 </style>
 
-<h1 class="page-title">Résultats et palmarès</h1>
+<div id="consultation">
 
-<!-- ========================================================== -->
-<!-- Recherche d'un coureur -->
-<!-- ========================================================== -->
-<section class="card mb-3">
-    <div class="card-header">Retrouver les résultats d'un coureur</div>
-    <div class="card-body">
 
-        <label for="rechercheNom" class="form-label">
-            Saisissez les premières lettres du nom
-        </label>
-        <input type="text"
-               id="rechercheNom"
-               class="form-control"
-               placeholder="Ex. : Dup..."
-               autocomplete="off">
+    <h1 class="page-title">Résultats et palmarès</h1>
 
-        <ul id="listeCoureurs" class="list-group mt-2"></ul>
+    <!-- ========================================================== -->
+    <!-- Recherche d'un coureur -->
+    <!-- ========================================================== -->
+    <section class="card mb-4">
+        <div class="card-header">Retrouver les résultats d'un coureur</div>
+        <div class="card-body">
 
-        <div id="resultatsCoureur" class="mt-3"></div>
+            <label for="rechercheNom" class="form-label">
+                Saisissez les premières lettres du nom
+            </label>
+            <input type="text"
+                   id="rechercheNom"
+                   class="form-control"
+                   placeholder="Ex. : Dup..."
+                   autocomplete="off">
 
-    </div>
-</section>
+            <ul id="listeCoureurs" class="list-group mt-2"></ul>
 
-<!-- ========================================================== -->
-<!-- Palmarès -->
-<!-- ========================================================== -->
-<section class="card">
-    <div class="card-header">Palmarès (nombre de victoires)</div>
-    <div class="card-body">
-        <table class="table" id="tablePalmares">
-            <thead>
-            <tr>
-                <th>Rang</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Victoires</th>
-            </tr>
-            </thead>
-            <tbody id="lignesPalmares"></tbody>
-        </table>
-    </div>
-</section>
+            <div id="resultatsCoureur" class="mt-3"></div>
+
+        </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- Palmarès -->
+    <!-- ========================================================== -->
+    <section class="card">
+        <div class="card-header">Palmarès (nombre de victoires)</div>
+        <div class="card-body">
+
+            <!-- Filtres : sexe, distance, saison et année -->
+            <div class="row g-2 mb-3">
+                <div class="col-sm-6 col-lg-3">
+                    <label for="filtreSexe" class="form-label">Catégorie</label>
+                    <select id="filtreSexe" class="form-select">
+                        <option value="">Filles et garçons</option>
+                        <option value="F">Filles</option>
+                        <option value="M">Garçons</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <label for="filtreDistance" class="form-label">Distance</label>
+                    <select id="filtreDistance" class="form-select">
+                        <option value="">Toutes les distances</option>
+                        <option value="5 km">5 km</option>
+                        <option value="10 km">10 km</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <label for="filtreSaison" class="form-label">Saison</label>
+                    <select id="filtreSaison" class="form-select">
+                        <option value="">Toutes les saisons</option>
+                        <option value="printemps">Printemps</option>
+                        <option value="ete">Été</option>
+                        <option value="automne">Automne</option>
+                        <option value="hiver">Hiver</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <label for="filtreAnnee" class="form-label">Année</label>
+                    <select id="filtreAnnee" class="form-select">
+                        <option value="">Toutes les années</option>
+                        <!-- les années sont ajoutées par index.js -->
+                    </select>
+                </div>
+            </div>
+
+            <table class="table" id="tablePalmares">
+                <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Victoires</th>
+                </tr>
+                </thead>
+                <tbody id="lignesPalmares"></tbody>
+            </table>
+        </div>
+    </section>
+</div>

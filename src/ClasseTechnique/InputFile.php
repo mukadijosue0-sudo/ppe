@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace ClasseTechnique;
@@ -10,19 +9,13 @@ namespace ClasseTechnique;
  * Vérifie un fichier reçu avant son traitement.
  *
  * @author Guy Verghote
- * @version 2026.2
- * @date    31/07/2026
+ * @version 2026.4
+ * @date    26/10/2026
  */
 class InputFile extends Input
 {
     // Fichier reçu.
     protected array $file;
-    // Validation effectuée.
-    protected bool $valide = false;
-    // Transformation de casse.
-    protected string $casse = '';
-    // Suppression des accents.
-    protected bool $sansAccent = true;
     // Extensions autorisées.
     protected array $lesExtensions = [];
     // Types MIME autorisés.
@@ -33,7 +26,7 @@ class InputFile extends Input
     /**
      * Constructeur.
      */
-    public function __construct(array $fichier)
+    public function __construct(array $fichier, $lesParametres)
     {
         parent::__construct();
 
@@ -43,54 +36,19 @@ class InputFile extends Input
 
         $this->file = $fichier;
         $this->setValue((string)$fichier['name']);
-    }
 
-    /**
-     * Définit les extensions autorisées.
-     */
-    public function setLesExtensions(array $extensions): void
-    {
-        $this->lesExtensions = array_map('strtolower', $extensions);
-    }
-
-    /**
-     * Définit les types MIME autorisés.
-     */
-    public function setLesTypes(array $types): void
-    {
-        $this->lesTypes = array_map('strtolower', $types);
-    }
-
-    /**
-     * Définit la taille maximale.
-     */
-    public function setMaxSize(int $maxSize): void
-    {
-        $this->maxSize = max(0, $maxSize);
-    }
-
-    /**
-     * Active ou non la suppression des accents.
-     */
-    public function setSansAccent(bool $sansAccent): void
-    {
-        $this->sansAccent = $sansAccent;
-    }
-
-    /**
-     * Définit la casse.
-     *
-     * @param string $casse '' pour aucune, 'U' pour majuscules, 'L' pour minuscules
-     *
-     * @throws UserException si la casse n'est pas valide
-     */
-    public function setCasse(string $casse): void
-    {
-        if (!in_array($casse, ['', 'U', 'L'], true)) {
-            throw new UserException("La casse doit être vide, U ou L.");
+        if (isset($lesParametres['maxSize'])) {
+            $this->maxSize = max(0, ((int)$lesParametres['maxSize']));
         }
 
-        $this->casse = $casse;
+        if (isset($lesParametres['lesExtensions']) && is_array($lesParametres['lesExtensions'])) {
+            $this->lesExtensions = array_map('strtolower', $lesParametres['lesExtensions']);
+        }
+
+        if (isset($lesParametres['lesTypes']) && is_array($lesParametres['lesTypes'])) {
+            $this->lesTypes = array_map('strtolower', $lesParametres['lesTypes']);
+        }
+        return $this;
     }
 
     /**
@@ -108,7 +66,6 @@ class InputFile extends Input
     {
         return (string)$this->file['name'];
     }
-
 
     /**
      * Retourne le fichier temporaire.
@@ -156,19 +113,8 @@ class InputFile extends Input
         if ($finfo === false) {
             return '';
         }
-
         $mime = finfo_file($finfo, $this->getTmpName());
-        finfo_close($finfo);
-
         return $mime === false ? '' : strtolower($mime);
-    }
-
-    /**
-     * Indique si le fichier est valide.
-     */
-    public function isValide(): bool
-    {
-        return $this->valide;
     }
 
     /**
@@ -176,8 +122,6 @@ class InputFile extends Input
      */
     public function checkValidity(): bool
     {
-        $this->valide = false;
-
         if (!$this->verifierTeleversement()) {
             return false;
         }
@@ -201,9 +145,6 @@ class InputFile extends Input
         if (!$this->preparerNomFichier()) {
             return false;
         }
-
-        $this->valide = true;
-
         return true;
     }
 
@@ -225,7 +166,6 @@ class InputFile extends Input
                 $this->validationMessage = "Aucun fichier n'a été téléversé.";
                 return false;
             }
-
             return true;
         }
 
@@ -239,6 +179,11 @@ class InputFile extends Input
             return false;
         }
 
+        // Sécurité : contrôle que le fichier vient bien d'un téléversement HTTP POST
+        if (!is_uploaded_file($this->getTmpName())) {
+            $this->validationMessage = "Le fichier n'est pas un fichier téléversé valide.";
+            return false;
+        }
         return true;
     }
 
@@ -267,9 +212,7 @@ class InputFile extends Input
         if ($this->maxSize === 0 || $this->getSize() <= $this->maxSize) {
             return true;
         }
-
         $this->validationMessage = "La taille du fichier (" . $this->getSize() . " octets) dépasse la taille autorisée (" . $this->maxSize . " octets).";
-
         return false;
     }
 
@@ -279,13 +222,10 @@ class InputFile extends Input
     protected function verifierExtension(): bool
     {
         $extension = $this->getExtension();
-
         if (in_array($extension, $this->lesExtensions, true)) {
             return true;
         }
-
         $this->validationMessage = "L'extension .$extension n'est pas autorisée.";
-
         return false;
     }
 
@@ -295,13 +235,10 @@ class InputFile extends Input
     protected function verifierTypeMime(): bool
     {
         $mime = $this->getMimeType();
-
         if (in_array($mime, $this->lesTypes, true)) {
             return true;
         }
-
         $this->validationMessage = "Le type MIME '$mime' n'est pas autorisé.";
-
         return false;
     }
 
@@ -311,70 +248,96 @@ class InputFile extends Input
     protected function preparerNomFichier(): bool
     {
         $nom = $this->getName();
-        $nom = $this->appliquerCasse($nom);
-
-        if ($this->sansAccent) {
-            $nom = $this->supprimerAccents($nom);
-        }
-
+        $nom = $this->retirerAccent($nom);
+        $nom = strtolower($nom);
         $nom = $this->nettoyerNom($nom);
-
         if ($nom === '') {
             $this->validationMessage = "Le nom du fichier est invalide.";
             return false;
         }
-
         $this->setValue($nom);
-
         return true;
     }
 
-    /**
-     * Applique la casse.
-     */
-    protected function appliquerCasse(string $nom): string
-    {
-        return match ($this->casse) {
-            'U' => strtoupper($nom),
-            'L' => strtolower($nom),
-            default => $nom
-        };
-    }
 
     /**
      * Supprime les accents.
      *
      * @param string $nom Le nom à traiter
      * @return string Le nom sans accents
-     *
      */
-    protected function supprimerAccents(string $nom): string
+    protected function retirerAccent(string $nom): string
     {
+        // Méthode principale : extension Intl.
         if (class_exists(\Transliterator::class)) {
             $resultat = transliterator_transliterate('Any-Latin; Latin-ASCII', $nom);
-
             if ($resultat !== false) {
                 return $resultat;
             }
         }
 
+        // Méthode de secours : iconv.
         $resultat = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $nom);
+        if ($resultat !== false) {
+            return $resultat;
+        }
 
-        return $resultat === false ? $nom : $resultat;
+        // Dernière solution : remplacement manuel des caractères accentués.
+        return strtr($nom, [
+            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A',
+            'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE',
+            'Ç' => 'C',
+            'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E',
+            'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I',
+            'Ð' => 'D',
+            'Ñ' => 'N',
+            'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O',
+            'Ö' => 'O', 'Ø' => 'O',
+            'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U',
+            'Ý' => 'Y',
+            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a',
+            'ä' => 'a', 'å' => 'a', 'æ' => 'ae',
+            'ç' => 'c',
+            'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
+            'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+            'ð' => 'd',
+            'ñ' => 'n',
+            'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o',
+            'ö' => 'o', 'ø' => 'o',
+            'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u',
+            'ý' => 'y', 'ÿ' => 'y',
+            'Œ' => 'OE', 'œ' => 'oe',
+            'Š' => 'S', 'š' => 's',
+            'Ž' => 'Z', 'ž' => 'z',
+        ]);
     }
 
     /**
-     * Nettoie le nom.
+     * Nettoie le nom : le nom de base ne conserve que [a-z0-9_-] (espaces remplacés par _),
+     * l'extension est conservée après un unique point.
      */
     protected function nettoyerNom(string $nom): string
     {
-        $nom = preg_replace('/[^a-zA-Z0-9._ -]/', '', $nom);
-        $nom = preg_replace('/\s+/', ' ', $nom ?? '');
+        $base = pathinfo($nom, PATHINFO_FILENAME);
+        $extension = pathinfo($nom, PATHINFO_EXTENSION);
 
-        if ($nom === '' || str_starts_with($nom, '.')) {
+        // Passage en minuscules pour uniformiser la casse
+        $base = mb_strtolower($base, 'UTF-8');
+        $extension = mb_strtolower($extension, 'UTF-8');
+
+        // Remplacement des espaces ET des apostrophes par des underscores
+        $base = preg_replace('/[\s\']+/', '_', trim($base)) ?? '';
+
+        // Suppression des caractères non autorisés (conservation des tirets du bas, tirets et alphanumériques)
+        $base = preg_replace('/[^a-z0-9_-]/', '', $base) ?? '';
+
+        // Suppression des caractères non autorisés dans l'extension
+        $extension = preg_replace('/[^a-z0-9]/', '', $extension) ?? '';
+
+        if ($base === '') {
             return '';
         }
 
-        return trim($nom);
+        return $extension === '' ? $base : $base . '.' . $extension;
     }
 }

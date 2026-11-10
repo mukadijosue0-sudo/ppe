@@ -41,15 +41,49 @@ try {
 
         // Palmarès : nombre de victoires par coureur
         case 'palmares':
-            $sql = "SELECT c.id AS idCoureur, c.nom, c.prenom, COUNT(*) AS nbVictoires
-                FROM coureur c
-                INNER JOIN resultat r ON r.idCoureur = c.id
-                WHERE r.place = 1
-                GROUP BY c.id, c.nom, c.prenom
-                ORDER BY nbVictoires DESC";
+            $sexe     = trim($_POST['sexe'] ?? '');
+            $distance = trim($_POST['distance'] ?? '');
+            $saison   = trim($_POST['saison'] ?? '');
+            $annee    = trim($_POST['annee'] ?? '');
 
-            $lesPalmares = $select->getRows($sql);
-            echo json_encode($lesPalmares, JSON_UNESCAPED_UNICODE);
+            // Sans filtre de sexe, la victoire est la 1re place du classement général ;
+            // avec un sexe, c'est la meilleure place parmi les coureurs de ce sexe.
+            $partition = ($sexe === '') ? 'r.idCourse' : 'r.idCourse, c.sexe';
+
+            $conditions = [];
+            $params = [];
+            if ($sexe !== '') {
+                $conditions[] = 't.sexe = :sexe';
+                $params['sexe'] = $sexe;
+            }
+            if (in_array($distance, ['5 km', '10 km'], true)) {
+                $conditions[] = 't.distance = :distance';
+                $params['distance'] = $distance;
+            }
+            if (in_array($saison, ['printemps', 'ete', 'automne', 'hiver'], true)) {
+                $conditions[] = 't.saison = :saison';
+                $params['saison'] = $saison;
+            }
+            if (preg_match('/^\d{4}$/', $annee) === 1) {
+                $conditions[] = 't.annee = :annee';
+                $params['annee'] = (int) $annee;
+            }
+            $where = $conditions ? ' AND ' . implode(' AND ', $conditions) : '';
+
+            $sql = "SELECT t.idCoureur, t.nom, t.prenom, COUNT(*) AS nbVictoires
+        FROM (
+            SELECT c.id AS idCoureur, c.nom, c.prenom, c.sexe, cr.distance,
+                   cr.saison, YEAR(cr.date) AS annee,
+                   RANK() OVER (PARTITION BY $partition ORDER BY r.place) AS rang
+            FROM resultat r
+            INNER JOIN coureur c ON c.id = r.idCoureur
+            INNER JOIN course cr ON cr.id = r.idCourse
+        ) t
+        WHERE t.rang = 1 $where
+        GROUP BY t.idCoureur, t.nom, t.prenom
+        ORDER BY nbVictoires DESC, t.nom, t.prenom";
+
+            echo json_encode($select->getRows($sql, $params), JSON_UNESCAPED_UNICODE);
             break;
 
         // Résultats détaillés d'un coureur

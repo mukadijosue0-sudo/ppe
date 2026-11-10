@@ -3,8 +3,8 @@
 
 'use strict';
 
-// Version 2026.4
-// Date version : 06/09/2026
+// Version 2026.5
+// Date version : 27/10/2026
 
 // -----------------------------------------------------------------------------
 // Variables persistantes
@@ -28,15 +28,11 @@ let confirmationMessage = null;
 //
 
 document.addEventListener('click', (event) => {
-
     const bouton = event.target.closest('.messageGenerer-fermer');
-
     if (!bouton) {
         return;
     }
-
     const message = bouton.closest('.messageGenerer');
-
     if (message) {
         message.remove();
     }
@@ -104,17 +100,13 @@ export function genererMessage(texte, couleur = 'rouge', duree = 0) {
     // -------------------------------------------------------------------------
 
     let code = '#fb7e7b';
-
     switch (couleur) {
-
         case 'vert':
             code = '#1FA055';
             break;
-
         case 'orange':
             code = '#FF7415';
             break;
-
         case 'rouge':
         default:
             code = '#fb7e7b';
@@ -125,8 +117,7 @@ export function genererMessage(texte, couleur = 'rouge', duree = 0) {
     // Génération d'un identifiant unique
     // -------------------------------------------------------------------------
 
-    const id =
-        `message-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+    const id = `message-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 
     // -------------------------------------------------------------------------
     // Génération du HTML
@@ -179,18 +170,13 @@ export function genererMessage(texte, couleur = 'rouge', duree = 0) {
     // -------------------------------------------------------------------------
 
     if (duree > 0) {
-
         setTimeout(() => {
-
             const element = document.getElementById(id);
-
             if (element) {
                 element.remove();
             }
-
         }, duree);
     }
-
     return html;
 }
 
@@ -225,21 +211,15 @@ export function afficherToast(message, type = 'success', position = 'bottom-cent
     // Conteneur
     // -------------------------------------------------------------------------
 
-    let container =
-        document.getElementById('toast-container');
-
+    let container = document.getElementById('toast-container');
     if (!container) {
-
         container = document.createElement('div');
-
         container.id = 'toast-container';
-
         Object.assign(container.style, {
             position: 'fixed',
             zIndex: '9999',
             pointerEvents: 'none'
         });
-
         document.body.appendChild(container);
     }
 
@@ -258,53 +238,39 @@ export function afficherToast(message, type = 'success', position = 'bottom-cent
     // -------------------------------------------------------------------------
 
     switch (position) {
-
         case 'top-left':
             container.style.top = '1rem';
             container.style.left = '1rem';
             break;
-
         case 'top-right':
             container.style.top = '1rem';
             container.style.right = '1rem';
             break;
-
         case 'bottom-left':
             container.style.bottom = '1rem';
             container.style.left = '1rem';
             break;
-
         case 'bottom-right':
             container.style.bottom = '1rem';
             container.style.right = '1rem';
             break;
-
         case 'top-center':
             container.style.top = '1rem';
             container.style.left = '50%';
             container.style.transform = 'translateX(-50%)';
             break;
-
         case 'bottom-center':
             container.style.bottom = '1rem';
             container.style.left = '50%';
             container.style.transform = 'translateX(-50%)';
             break;
-
         case 'center':
             container.style.top = '50%';
             container.style.left = '50%';
-            container.style.transform =
-                'translate(-50%, -50%)';
+            container.style.transform = 'translate(-50%, -50%)';
             break;
-
         default:
-
-            console.warn(
-                `Position "${position}" inconnue, ` +
-                `positionnement par défaut à "bottom-right".`
-            );
-
+            console.warn(`Position "${position}" inconnue, ` + `positionnement par défaut à "bottom-right".`);
             container.style.bottom = '1rem';
             container.style.right = '1rem';
             break;
@@ -315,7 +281,6 @@ export function afficherToast(message, type = 'success', position = 'bottom-cent
     // -------------------------------------------------------------------------
 
     const backgroundColors = {
-
         success: '#20ef51',
         error: '#ef2b3d',
         warning: '#fec105',
@@ -323,7 +288,6 @@ export function afficherToast(message, type = 'success', position = 'bottom-cent
     };
 
     const textColors = {
-
         success: '#155724',
         error: '#721c24',
         warning: '#856404',
@@ -335,39 +299,21 @@ export function afficherToast(message, type = 'success', position = 'bottom-cent
     // -------------------------------------------------------------------------
 
     const toast = document.createElement('div');
-
     toast.innerHTML = message;
-
     Object.assign(toast.style, {
-
-        background:
-            backgroundColors[type] || backgroundColors.info,
-
-        color:
-            textColors[type] || textColors.info,
-
+        background: backgroundColors[type] || backgroundColors.info,
+        color: textColors[type] || textColors.info,
         borderRadius: '5px',
-
         padding: '10px 15px',
-
         marginTop: '8px',
-
-        boxShadow:
-            '0 2px 6px rgba(0,0,0,0.2)',
-
+        boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
         fontFamily: 'sans-serif',
-
         fontSize: '0.95rem',
-
         maxWidth: '300px',
-
         pointerEvents: 'auto',
-
         opacity: '1',
-
         transition: 'opacity 0.5s ease'
     });
-
     container.appendChild(toast);
 
     // -------------------------------------------------------------------------
@@ -375,25 +321,15 @@ export function afficherToast(message, type = 'success', position = 'bottom-cent
     // -------------------------------------------------------------------------
 
     if (duration > 0) {
-
         setTimeout(() => {
-
             toast.style.opacity = '0';
-
             setTimeout(() => {
-
                 toast.remove();
-
                 // Supprimer le conteneur s'il est devenu vide
-                if (
-                    container.children.length === 0 &&
-                    container.parentElement
-                ) {
+                if (container.children.length === 0 && container.parentElement) {
                     container.remove();
                 }
-
             }, 500);
-
         }, duration);
     }
 }
@@ -412,26 +348,19 @@ function installerStyleMessageErreur() {
     if (document.getElementById('style-message-erreur')) {
         return;
     }
-
     const style = document.createElement('style');
-
     style.id = 'style-message-erreur';
-
     style.textContent = `
         .messageErreur {
             display: block;
             width: 100%;
             box-sizing: border-box;
-
             margin-top: 0.35rem;
-
             color: #dc3545;
             font-size: 0.8rem;
             font-weight: 500;
             line-height: 1.3;
-
             background: transparent;
-
             text-align: left;
         }
 
@@ -452,10 +381,8 @@ function installerStyleMessageErreur() {
             box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.15);
         }
     `;
-
     document.head.appendChild(style);
 }
-
 
 // =============================================================================
 // MESSAGE SOUS UN CHAMP
@@ -479,20 +406,15 @@ export function afficherSousLeChamp(inputOuId, message) {
     // -------------------------------------------------------------------------
 
     let input;
-
     if (typeof inputOuId === 'string') {
-
         input = document.getElementById(inputOuId);
-
     } else if (
         inputOuId instanceof HTMLInputElement ||
         inputOuId instanceof HTMLTextAreaElement ||
         inputOuId instanceof HTMLSelectElement
     ) {
-
         input = inputOuId;
     }
-
     installerStyleMessageErreur();
 
     // -------------------------------------------------------------------------
@@ -500,50 +422,26 @@ export function afficherSousLeChamp(inputOuId, message) {
     // -------------------------------------------------------------------------
 
     if (!input) {
-
-        const nomChamp =
-            typeof inputOuId === 'string'
-                ? inputOuId
-                : '(élément invalide)';
-
-        const texteErreur =
-            message ||
-            `Erreur : Le champ "${nomChamp}" n'existe pas.`;
-
+        const nomChamp = typeof inputOuId === 'string' ? inputOuId : '(élément invalide)';
+        const texteErreur = message || `Erreur : Le champ "${nomChamp}" n'existe pas.`;
         const msg = document.getElementById('msg');
-
         if (msg) {
-
-            msg.innerHTML = genererMessage(
-                texteErreur,
-                'rouge'
-            );
-
+            msg.innerHTML = genererMessage(texteErreur, 'rouge');
         } else {
-
-            messageBox(
-                texteErreur,
-                'error'
-            );
+            messageBox(texteErreur, 'error');
         }
-
-        console.warn(
-            `afficherSousLeChamp : Le champ "${nomChamp}" est introuvable ou invalide.`
-        );
-
+        console.warn(`afficherSousLeChamp : Le champ "${nomChamp}" est introuvable ou invalide.`);
         return;
     }
 
     // -------------------------------------------------------------------------
     // Suppression d'une ancienne erreur
     // -------------------------------------------------------------------------
-
     effacerSousLeChamp(input);
 
     // -------------------------------------------------------------------------
     // null = uniquement effacer l'erreur
     // -------------------------------------------------------------------------
-
     if (message === null) {
         return;
     }
@@ -551,7 +449,6 @@ export function afficherSousLeChamp(inputOuId, message) {
     // -------------------------------------------------------------------------
     // undefined = utiliser le message HTML5
     // -------------------------------------------------------------------------
-
     if (message === undefined) {
         message = input.validationMessage;
     }
@@ -559,7 +456,6 @@ export function afficherSousLeChamp(inputOuId, message) {
     // -------------------------------------------------------------------------
     // Aucun message
     // -------------------------------------------------------------------------
-
     if (!message) {
         return;
     }
@@ -586,24 +482,16 @@ export function afficherSousLeChamp(inputOuId, message) {
     // Identifiant unique du message
     // -------------------------------------------------------------------------
 
-    const idMessage = input.id
-        ? `${input.id}-erreur`
-        : `erreur-${crypto.randomUUID()}`;
-
+    const idMessage = input.id ? `${input.id}-erreur` : `erreur-${crypto.randomUUID()}`;
     // -------------------------------------------------------------------------
     // Création du message
     // -------------------------------------------------------------------------
 
     const nouvelleDiv = document.createElement('div');
-
     nouvelleDiv.id = idMessage;
-
     nouvelleDiv.className = 'messageErreur';
-
     nouvelleDiv.setAttribute('role', 'alert');
-
     nouvelleDiv.setAttribute('aria-live', 'polite');
-
     nouvelleDiv.innerText = message;
 
     // -------------------------------------------------------------------------
@@ -611,7 +499,6 @@ export function afficherSousLeChamp(inputOuId, message) {
     // -------------------------------------------------------------------------
 
     if (champRecherche) {
-
         /*
          * Cas d'un champ de recherche.
          *
@@ -619,11 +506,8 @@ export function afficherSousLeChamp(inputOuId, message) {
          * réellement l'input et l'icône.
          */
 
-        const inputRecherche =
-            input.closest('.input-recherche');
-
+        const inputRecherche = input.closest('.input-recherche');
         if (inputRecherche) {
-
             /*
              * Le message est placé APRÈS .input-recherche.
              *
@@ -637,82 +521,38 @@ export function afficherSousLeChamp(inputOuId, message) {
              *
              * L'icône reste donc centrée dans le champ.
              */
-
-            inputRecherche.insertAdjacentElement(
-                'afterend',
-                nouvelleDiv
-            );
-
+            inputRecherche.insertAdjacentElement('afterend', nouvelleDiv);
         } else {
-
             /*
              * Sécurité pour les structures particulières.
              */
-
-            champRecherche.appendChild(
-                nouvelleDiv
-            );
+            champRecherche.appendChild(nouvelleDiv);
         }
-
     } else {
-
         // ---------------------------------------------------------------------
         // Champ classique hors zone de recherche
         // ---------------------------------------------------------------------
-
         const parent = input.parentElement;
-
-        if (
-            parent &&
-            parent.classList.contains('password-wrapper')
-        ) {
-
+        if (parent && parent.classList.contains('password-wrapper')) {
             /*
              * Cas d'un champ mot de passe.
              */
 
-            if (
-                parent.parentElement &&
-                parent.parentElement.classList.contains('champ')
-            ) {
-
-                parent.parentElement.insertAdjacentElement(
-                    'afterend',
-                    nouvelleDiv
-                );
-
+            if (parent.parentElement && parent.parentElement.classList.contains('champ')) {
+                parent.parentElement.insertAdjacentElement('afterend', nouvelleDiv);
             } else {
-
-                parent.insertAdjacentElement(
-                    'afterend',
-                    nouvelleDiv
-                );
+                parent.insertAdjacentElement('afterend', nouvelleDiv);
             }
-
-        } else if (
-            parent &&
-            parent.classList.contains('champ')
-        ) {
-
+        } else if (parent && parent.classList.contains('champ')) {
             /*
              * Cas d'un champ dans .champ.
              */
-
-            parent.insertAdjacentElement(
-                'afterend',
-                nouvelleDiv
-            );
-
+            parent.insertAdjacentElement('afterend', nouvelleDiv);
         } else {
-
             /*
              * Cas général.
              */
-
-            input.insertAdjacentElement(
-                'afterend',
-                nouvelleDiv
-            );
+            input.insertAdjacentElement('afterend', nouvelleDiv);
         }
     }
 
@@ -720,17 +560,9 @@ export function afficherSousLeChamp(inputOuId, message) {
     // Accessibilité
     // -------------------------------------------------------------------------
 
-    input.setAttribute(
-        'aria-invalid',
-        'true'
-    );
-
-    input.setAttribute(
-        'aria-describedby',
-        idMessage
-    );
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', idMessage);
 }
-
 
 
 // =============================================================================
@@ -745,7 +577,6 @@ export function afficherSousLeChamp(inputOuId, message) {
 export function effacerSousLeChamp(inputOuId) {
 
     let input;
-
     if (typeof inputOuId === 'string') {
         input = document.getElementById(inputOuId);
     } else if (inputOuId instanceof HTMLInputElement || inputOuId instanceof HTMLTextAreaElement || inputOuId instanceof HTMLSelectElement) {
@@ -760,7 +591,6 @@ export function effacerSousLeChamp(inputOuId) {
     // -------------------------------------------------------------------------
 
     const idMessage = input.getAttribute('aria-describedby');
-
     if (idMessage) {
         const messageErreur = document.getElementById(idMessage);
         if (messageErreur && messageErreur.classList.contains('messageErreur')) {
@@ -772,10 +602,8 @@ export function effacerSousLeChamp(inputOuId) {
     // -------------------------------------------------------------------------
     // Champ redevenu valide
     // -------------------------------------------------------------------------
-
     input.removeAttribute('aria-invalid');
 }
-
 
 // =============================================================================
 // MESSAGE BOX
@@ -804,7 +632,6 @@ export function messageBox(message, type = 'success') {
     // -------------------------------------------------------------------------
     // Supprimer une ancienne boîte
     // -------------------------------------------------------------------------
-
     document.getElementById('avertir-modal')?.remove();
 
     // -------------------------------------------------------------------------
@@ -829,20 +656,15 @@ export function messageBox(message, type = 'success') {
     // Overlay
     // -------------------------------------------------------------------------
 
-    const overlay =
-        document.createElement('div');
-
+    const overlay = document.createElement('div');
     overlay.id = 'avertir-modal';
-
     Object.assign(overlay.style, {
-
         position: 'fixed',
         top: '0',
         left: '0',
         width: '100vw',
         height: '100vh',
-        backgroundColor:
-            'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -855,9 +677,7 @@ export function messageBox(message, type = 'success') {
     // -------------------------------------------------------------------------
 
     const box = document.createElement('div');
-
     Object.assign(box.style, {
-
         backgroundColor: couleurs[type] || couleurs.info,
         color: textes[type] || textes.info,
         padding: '20px',
@@ -881,8 +701,7 @@ export function messageBox(message, type = 'success') {
     // Bouton
     // -------------------------------------------------------------------------
 
-    const bouton =
-        document.createElement('button');
+    const bouton = document.createElement('button');
 
     bouton.type = 'button';
     bouton.textContent = 'OK';
@@ -918,13 +737,11 @@ export function messageBox(message, type = 'success') {
  * @param {string|object|null|undefined} message
  */
 export function afficherErreur(message) {
-
     let texte;
 
     // -------------------------------------------------------------------------
     // Objet ou tableau
     // -------------------------------------------------------------------------
-
     if (typeof message === 'object' && message !== null) {
         try {
             texte = JSON.stringify(message, null, 2);
@@ -932,11 +749,9 @@ export function afficherErreur(message) {
             texte = String(message);
         }
     } else {
-
         // ---------------------------------------------------------------------
         // null / undefined
         // ---------------------------------------------------------------------
-
         if (message === null || message === undefined) {
             texte = '';
         } else {
@@ -946,20 +761,17 @@ export function afficherErreur(message) {
         // ---------------------------------------------------------------------
         // Remplacement des <br>
         // ---------------------------------------------------------------------
-
         texte = texte.replace(/<br\s*\/?>/gi, "\n");
 
         // ---------------------------------------------------------------------
         // Suppression des autres balises HTML
         // ---------------------------------------------------------------------
-
         const tmp = document.createElement('div');
         tmp.innerHTML = texte;
         texte = tmp.textContent || tmp.innerText || '';
     }
     console.error("Erreur reçue :\n" + texte);
 }
-
 
 // =============================================================================
 // REDIRECTION AUTOMATIQUE
@@ -973,7 +785,9 @@ export function afficherErreur(message) {
  * @param {number} delay
  */
 export function retournerVers(message, url, delay = 2000) {
-    afficherToast(message, 'success');
+    // On passe le delay à afficherToast pour qu'il reste visible pendant toute la durée
+    afficherToast(message, 'success', 'bottom-center', delay);
+
     setTimeout(() => {
         location.href = url;
     }, delay);
@@ -991,16 +805,8 @@ export function retournerVers(message, url, delay = 2000) {
  * @param {string} url
  */
 export function retournerVersApresConfirmation(message, url) {
-    messageBox(
-        message,
-        'info'
-    );
-
-    const bouton =
-        document.querySelector(
-            '#avertir-modal button'
-        );
-
+    messageBox(message, 'info');
+    const bouton = document.querySelector('#avertir-modal button');
     if (bouton) {
         bouton.onclick = () => {
             document.getElementById('avertir-modal')?.remove();
@@ -1008,7 +814,6 @@ export function retournerVersApresConfirmation(message, url) {
         };
     }
 }
-
 
 // =============================================================================
 // CORRIGER
@@ -1067,9 +872,7 @@ export function confirmer(callback, message = 'Confirmer votre demande ?') {
         // ---------------------------------------------------------------------
         // Contenu
         // ---------------------------------------------------------------------
-
         const contenu = document.createElement('div');
-
         Object.assign(contenu.style, {
             background: 'white',
             padding: '20px',
@@ -1084,14 +887,12 @@ export function confirmer(callback, message = 'Confirmer votre demande ?') {
         // ---------------------------------------------------------------------
         // Message
         // ---------------------------------------------------------------------
-
         confirmationMessage = document.createElement('p');
         confirmationMessage.id = 'confirmationMessage';
 
         // ---------------------------------------------------------------------
         // Boutons
         // ---------------------------------------------------------------------
-
         const boutons = document.createElement('div');
         boutons.style.marginTop = '20px';
         btnOui = document.createElement('button');
@@ -1133,7 +934,6 @@ export function confirmer(callback, message = 'Confirmer votre demande ?') {
         // ---------------------------------------------------------------------
         // Bouton Non
         // ---------------------------------------------------------------------
-
         btnNon.onclick = () => {
             modal.style.display = 'none';
         };
@@ -1148,13 +948,11 @@ export function confirmer(callback, message = 'Confirmer votre demande ?') {
     // -------------------------------------------------------------------------
     // Affichage
     // -------------------------------------------------------------------------
-
     modal.style.display = 'flex';
 
     // -------------------------------------------------------------------------
     // Événement Oui
     // -------------------------------------------------------------------------
-
     btnOui.onclick = () => {
         modal.style.display = 'none';
         if (typeof callback === 'function') {
@@ -1165,7 +963,6 @@ export function confirmer(callback, message = 'Confirmer votre demande ?') {
     // -------------------------------------------------------------------------
     // Focus sur Oui
     // -------------------------------------------------------------------------
-
     btnOui.focus();
 }
 
@@ -1187,20 +984,13 @@ export async function afficherVeuillezPatienter() {
     // Vérifier si la fenêtre existe
     // -------------------------------------------------------------------------
 
-    let modalChargement =
-        document.getElementById(
-            'modalVeuillezPatienter'
-        );
-
+    let modalChargement = document.getElementById('modalVeuillezPatienter');
     if (!modalChargement) {
-
         // ---------------------------------------------------------------------
         // Overlay
         // ---------------------------------------------------------------------
-
         modalChargement = document.createElement('div');
         modalChargement.id = 'modalVeuillezPatienter';
-
         Object.assign(modalChargement.style,
             {
                 position: 'fixed',
@@ -1222,7 +1012,6 @@ export async function afficherVeuillezPatienter() {
         // ---------------------------------------------------------------------
 
         const contenu = document.createElement('div');
-
         Object.assign(contenu.style, {
                 backgroundColor: 'white',
                 padding: '2rem',
@@ -1235,17 +1024,13 @@ export async function afficherVeuillezPatienter() {
         // ---------------------------------------------------------------------
         // Message
         // ---------------------------------------------------------------------
-
         const message = document.createElement('p');
-
         message.textContent = 'Veuillez patienter...';
 
         // ---------------------------------------------------------------------
         // Spinner CSS pur
         // ---------------------------------------------------------------------
-
         const spinner = document.createElement('div');
-
         Object.assign(spinner.style, {
                 width: '2rem',
                 height: '2rem',
@@ -1257,7 +1042,6 @@ export async function afficherVeuillezPatienter() {
                 animation: 'interface-spinner 0.75s linear infinite'
             }
         );
-
         contenu.appendChild(message);
         contenu.appendChild(spinner);
         modalChargement.appendChild(contenu);
@@ -1266,11 +1050,10 @@ export async function afficherVeuillezPatienter() {
         // ---------------------------------------------------------------------
         // Ajouter l'animation CSS une seule fois
         // ---------------------------------------------------------------------
-
         if (!document.getElementById('interface-spinner-style')) {
             const style = document.createElement('style');
             style.id = 'interface-spinner-style';
-            style.textContent = `                @keyframes interface-spinner {                    to {                        transform: rotate(360deg);                    }                }            `;
+            style.textContent = `@keyframes interface-spinner { to {transform: rotate(360deg); }} `;
             document.head.appendChild(style);
         }
     }
@@ -1278,7 +1061,6 @@ export async function afficherVeuillezPatienter() {
     // -------------------------------------------------------------------------
     // Afficher
     // -------------------------------------------------------------------------
-
     modalChargement.style.display = 'flex';
     return modalChargement;
 }
@@ -1295,7 +1077,6 @@ export async function fermerVeuillezPatienter(modalInstance) {
         modalInstance.remove();
     }
 }
-
 
 // =============================================================================
 // COMPTEUR ANIMÉ
@@ -1335,15 +1116,12 @@ export function afficherCompteur({conteneur, valeurFinale, duree = 1000, format 
     Object.assign(conteneur.style, {
             opacity: '0',
             transform: 'scale(1)',
-            transition:
-                'opacity 0.4s ease-in, ' +
-                'transform 0.2s ease-out',
+            transition: 'opacity 0.4s ease-in, ' + 'transform 0.2s ease-out',
             fontWeight: 'bold',
             fontSize: '30px',
             color: 'black',
             textAlign: 'center',
             width: '150px',
-
             ...styles
         }
     );
@@ -1353,7 +1131,6 @@ export function afficherCompteur({conteneur, valeurFinale, duree = 1000, format 
     // -------------------------------------------------------------------------
 
     function easing(t) {
-
         return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
     }
 
@@ -1372,13 +1149,11 @@ export function afficherCompteur({conteneur, valeurFinale, duree = 1000, format 
         // ---------------------------------------------------------------------
         // Affichage
         // ---------------------------------------------------------------------
-
         conteneur.innerText = format ? format(affichage) : affichage;
 
         // ---------------------------------------------------------------------
         // Apparition
         // ---------------------------------------------------------------------
-
         if (progression >= 0.05 && conteneur.style.opacity !== '1') {
             conteneur.style.opacity = '1';
         }
@@ -1386,7 +1161,6 @@ export function afficherCompteur({conteneur, valeurFinale, duree = 1000, format 
         // ---------------------------------------------------------------------
         // Zoom
         // ---------------------------------------------------------------------
-
         if (progression < 0.5) {
             const scale = 1 + 0.3 * (1 - Math.abs(0.5 - progression) * 2);
             conteneur.style.transform = `scale(${scale})`;
