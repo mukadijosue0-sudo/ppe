@@ -118,8 +118,8 @@ class Resultat
         }
 
         // La requête fonctionne en 2 étapes :
-        // 1) la sous-requête "t" donne à chaque résultat son rang dans sa course
-        // 2) la requête principale garde les rangs 1 (les victoires) et les compte
+        // 1- la sous-requête "t" donne à chaque résultat son rang dans sa course
+        // 2- la requête principale garde les rangs 1 (les victoires) et les compte
         $sql = "SELECT t.idCoureur, t.nom, t.prenom, COUNT(*) AS nbVictoires
                 FROM (
                     SELECT c.id AS idCoureur, c.nom, c.prenom, c.sexe,

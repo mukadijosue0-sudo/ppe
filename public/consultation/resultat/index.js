@@ -1,18 +1,14 @@
 "use strict";
 
-// On importe la fonction qui permet d'appeler le serveur (Ajax)
 import {appelAjax} from "/composant/fonction/ajax.js";
 
-// -----------------------------------------------------------------------------------
-// On récupère les éléments de la page dont on a besoin
-// -----------------------------------------------------------------------------------
-const rechercheNom = document.getElementById("rechercheNom");           // le champ de saisie
-const listeCoureurs = document.getElementById("listeCoureurs");         // la liste des coureurs trouvés
-const resultatsCoureur = document.getElementById("resultatsCoureur");   // la zone du tableau de résultats
 
-// -----------------------------------------------------------------------------------
-// Quand on tape dans le champ, on lance la recherche
-// -----------------------------------------------------------------------------------
+const rechercheNom = document.getElementById("rechercheNom");
+const listeCoureurs = document.getElementById("listeCoureurs");
+const resultatsCoureur = document.getElementById("resultatsCoureur");
+
+
+
 rechercheNom.addEventListener("input", () => {
     // On enlève les espaces au début et à la fin
     const debutNom = rechercheNom.value.trim();
@@ -39,7 +35,8 @@ function rechercherCoureurs(debutNom) {
     appelAjax({
         url: "ajax/ajax.php",
         data: {action: "recherche", debutNom: debutNom},
-        // Quand le serveur répond, on affiche la liste des coureurs
+
+        // Quand le serveur répond on affiche la liste des coureurs
         success: (coureurs) => afficherListeCoureurs(coureurs)
     });
 }
@@ -49,10 +46,8 @@ function rechercherCoureurs(debutNom) {
  * @param {Array} coureurs la liste des coureurs reçue du serveur
  */
 function afficherListeCoureurs(coureurs) {
-    // On vide la liste avant de la remplir
-    listeCoureurs.innerHTML = "";
 
-    // Si personne n'a été trouvé, on affiche un message
+    listeCoureurs.innerHTML = "";
     if (coureurs.length === 0) {
         const li = document.createElement("li");
         li.className = "list-group-item text-muted";
@@ -61,7 +56,7 @@ function afficherListeCoureurs(coureurs) {
         return;
     }
 
-    // Pour chaque coureur, on crée une ligne dans la liste
+    // Pour chaque coureur on crée une ligne dans la liste
     for (const coureur of coureurs) {
         const li = document.createElement("li");
         li.className = "list-group-item";
@@ -73,10 +68,7 @@ function afficherListeCoureurs(coureurs) {
             texte = texte + " (" + coureur.annee + ")";
         }
         li.textContent = texte;
-
-        // Quand on clique sur le coureur, on le choisit
         li.addEventListener("click", () => choisirCoureur(coureur));
-
         listeCoureurs.appendChild(li);
     }
 }
@@ -88,13 +80,8 @@ function afficherListeCoureurs(coureurs) {
  * @param {Object} coureur le coureur choisi (id, nom, prenom...)
  */
 function choisirCoureur(coureur) {
-    // On écrit le nom du coureur choisi dans le champ de recherche
     rechercheNom.value = coureur.nom + " " + coureur.prenom;
-
-    // On fait disparaître la liste des coureurs
     listeCoureurs.innerHTML = "";
-
-    // On charge et on affiche ses résultats
     chargerResultats(coureur.id);
 }
 
@@ -116,16 +103,12 @@ function chargerResultats(idCoureur) {
  * @param {Array} resultats la liste des résultats reçue du serveur
  */
 function afficherResultats(resultats) {
-    // On vide la zone avant de la remplir
-    resultatsCoureur.innerHTML = "";
 
-    // Si le coureur n'a aucun résultat, on affiche un message
+    resultatsCoureur.innerHTML = "";
     if (resultats.length === 0) {
         resultatsCoureur.textContent = "Aucun résultat trouvé pour ce coureur.";
         return;
     }
-
-    // On crée le tableau
     const table = document.createElement("table");
     table.className = "table";
 
