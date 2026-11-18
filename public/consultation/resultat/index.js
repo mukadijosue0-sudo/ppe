@@ -74,11 +74,28 @@ function afficherListeCoureurs(coureurs) {
         }
         li.textContent = texte;
 
-        // Quand on clique sur le coureur, on charge ses résultats
-        li.addEventListener("click", () => chargerResultats(coureur.id));
+        // Quand on clique sur le coureur, on le choisit
+        li.addEventListener("click", () => choisirCoureur(coureur));
 
         listeCoureurs.appendChild(li);
     }
+}
+
+/**
+ * Appelée quand on clique sur un coureur dans la liste.
+ * La liste disparaît, le nom du coureur reste dans le champ de recherche
+ * et son tableau de résultats s'affiche.
+ * @param {Object} coureur le coureur choisi (id, nom, prenom...)
+ */
+function choisirCoureur(coureur) {
+    // On écrit le nom du coureur choisi dans le champ de recherche
+    rechercheNom.value = coureur.nom + " " + coureur.prenom;
+
+    // On fait disparaître la liste des coureurs
+    listeCoureurs.innerHTML = "";
+
+    // On charge et on affiche ses résultats
+    chargerResultats(coureur.id);
 }
 
 /**

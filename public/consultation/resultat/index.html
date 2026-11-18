@@ -1,24 +1,15 @@
 <style>
   /* Toutes les règles commencent par #pageResultat :
-     elles ne s'appliquent qu'à cette page, pas au menu ni à la bannière. */
+     elles ne s'appliquent qu'à cette partie de la page, pas au menu ni à la bannière.
+     La couleur rouge (#dc3545) est celle utilisée sur le reste du site. */
 
-  /* Le titre de la page */
-  #pageResultat .page-title {
-    color: #1d2733;
-    margin-bottom: 1.5rem;
-  }
-
-  /* La carte : un cadre arrondi */
-  #pageResultat .card {
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  /* Le bandeau sombre en haut de la carte */
-  #pageResultat .card-header {
-    background: #1d2733;
-    color: white;
-    font-weight: 600;
+  /* Le titre de la carte (le h2) */
+  #pageResultat h2 {
+    margin: 0 0 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dc3545;   /* trait rouge sous le titre */
+    font-size: 1.45rem;
+    color: #222;
   }
 
   /* La liste des coureurs trouvés : on peut cliquer sur chaque ligne */
@@ -31,14 +22,14 @@
     cursor: pointer;        /* le curseur devient une petite main */
   }
 
-  /* Quand la souris passe sur un coureur : fond bleu clair */
+  /* Quand la souris passe sur un coureur : fond rouge clair */
   #pageResultat #listeCoureurs .list-group-item:hover {
-    background: #e8f0fc;
+    background: #fff0f0;
   }
 
   /* L'en-tête du tableau des résultats */
   #pageResultat th {
-    background: #e8f0fc;
+    background: #fff0f0;    /* rouge très clair */
     white-space: nowrap;    /* on garde chaque titre sur une seule ligne */
   }
 
@@ -48,13 +39,27 @@
   }
 </style>
 
-<div id="pageResultat">
+<!-- Le cadre commun à toutes les pages du site -->
+<div class="page-card">
 
-  <h1 class="page-title">Résultats d'un coureur</h1>
+  <!-- L'en-tête de la page (le même que les autres pages) -->
+  <header class="page-header">
+    <div class="page-header-top">
+      <h1 class="page-title">
+        Courses des 4 saisons Amiens métropole <br>
+      </h1>
+      4 éditions par an depuis 1983
+    </div>
+  </header>
 
-  <section class="card">
-    <div class="card-header">Retrouver les résultats d'un coureur</div>
-    <div class="card-body">
+  <div class="page-body">
+
+    <!-- Cette balise affiche le menu horizontal (lu dans config/menuhorizontal.json) -->
+    <menu></menu>
+
+    <div id="pageResultat">
+
+      <h2>Résultats d'un coureur</h2>
 
       <!-- Le champ où on tape les premières lettres du nom -->
       <label for="rechercheNom" class="form-label">
@@ -73,5 +78,5 @@
       <div id="resultatsCoureur" class="mt-3"></div>
 
     </div>
-  </section>
+  </div>
 </div>
