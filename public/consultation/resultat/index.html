@@ -1,0 +1,77 @@
+<style>
+  /* Toutes les règles commencent par #pageResultat :
+     elles ne s'appliquent qu'à cette page, pas au menu ni à la bannière. */
+
+  /* Le titre de la page */
+  #pageResultat .page-title {
+    color: #1d2733;
+    margin-bottom: 1.5rem;
+  }
+
+  /* La carte : un cadre arrondi */
+  #pageResultat .card {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  /* Le bandeau sombre en haut de la carte */
+  #pageResultat .card-header {
+    background: #1d2733;
+    color: white;
+    font-weight: 600;
+  }
+
+  /* La liste des coureurs trouvés : on peut cliquer sur chaque ligne */
+  #pageResultat #listeCoureurs {
+    max-height: 260px;      /* hauteur maximum, ensuite on fait défiler */
+    overflow-y: auto;
+  }
+
+  #pageResultat #listeCoureurs .list-group-item {
+    cursor: pointer;        /* le curseur devient une petite main */
+  }
+
+  /* Quand la souris passe sur un coureur : fond bleu clair */
+  #pageResultat #listeCoureurs .list-group-item:hover {
+    background: #e8f0fc;
+  }
+
+  /* L'en-tête du tableau des résultats */
+  #pageResultat th {
+    background: #e8f0fc;
+    white-space: nowrap;    /* on garde chaque titre sur une seule ligne */
+  }
+
+  /* Sur petit écran, le tableau peut défiler vers la droite */
+  #pageResultat #resultatsCoureur {
+    overflow-x: auto;
+  }
+</style>
+
+<div id="pageResultat">
+
+  <h1 class="page-title">Résultats d'un coureur</h1>
+
+  <section class="card">
+    <div class="card-header">Retrouver les résultats d'un coureur</div>
+    <div class="card-body">
+
+      <!-- Le champ où on tape les premières lettres du nom -->
+      <label for="rechercheNom" class="form-label">
+        Saisissez les premières lettres du nom
+      </label>
+      <input type="text"
+             id="rechercheNom"
+             class="form-control"
+             placeholder="Ex. : Dup..."
+             autocomplete="off">
+
+      <!-- La liste des coureurs trouvés (remplie par index.js) -->
+      <ul id="listeCoureurs" class="list-group mt-2"></ul>
+
+      <!-- Le tableau des résultats du coureur choisi (rempli par index.js) -->
+      <div id="resultatsCoureur" class="mt-3"></div>
+
+    </div>
+  </section>
+</div>

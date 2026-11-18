@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 use ClasseTechnique\Page;
 
-/** @noinspection PhpIncludeInspection */
 require $_SERVER['DOCUMENT_ROOT'] . "/../bootstrap/bootstrap.php";
 
-// génération de la page (le palmarès est chargé en Ajax par index.js)
+// On génère la page.
+// Le contenu est dans index.html, et index.js gère la recherche.
 $page = new Page();
 
-$page->setTitre("Résultats et palmarès")
+$page->setTitre("Résultats d'un coureur")
     ->avecJeton()
     ->afficher();

@@ -18,8 +18,12 @@
       "href": "/4saisons/parcours"
     },
     {
-      "label": "Résultats Courses",
-      "href": "/consultation"
+      "label": "Résultats Coureurs",
+      "href": "/consultation/resultat"
+    },
+    {
+      "label": "Palmarès",
+      "href": "/consultation/palmares"
     }
   ]
 }

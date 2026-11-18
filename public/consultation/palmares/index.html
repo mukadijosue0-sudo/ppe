@@ -1,0 +1,119 @@
+<style>
+  /* Toutes les règles commencent par #pagePalmares :
+     elles ne s'appliquent qu'à cette partie de la page, pas au menu ni à la bannière.
+     La couleur rouge (#dc3545) est celle utilisée sur le reste du site. */
+
+  /* Le titre de la carte (le h2) */
+  #pagePalmares h2 {
+    margin: 0 0 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dc3545;   /* trait rouge sous le titre */
+    font-size: 1.45rem;
+    color: #222;
+  }
+
+  /* L'en-tête du tableau (Rang, Nom, Prénom, Victoires) */
+  #pagePalmares th {
+    background: #fff0f0;                /* rouge très clair */
+  }
+
+  /* La colonne Rang (1ère colonne) : centrée et en gras */
+  #pagePalmares td:first-child {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  /* Le 1er du palmarès : fond rouge, texte blanc */
+  #pagePalmares tr:nth-child(1) td:first-child {
+    background: #dc3545;
+    color: white;
+  }
+
+  /* Le 2e et le 3e : fond rouge clair */
+  #pagePalmares tr:nth-child(2) td:first-child,
+  #pagePalmares tr:nth-child(3) td:first-child {
+    background: #fff0f0;
+    color: #dc3545;
+  }
+
+  /* La colonne Victoires (dernière colonne) : en rouge, à droite */
+  #pagePalmares td:last-child,
+  #pagePalmares th:last-child {
+    text-align: right;
+    color: #dc3545;
+    font-weight: bold;
+  }
+</style>
+
+<!-- Le cadre commun à toutes les pages du site -->
+<div class="page-card">
+
+  <!-- L'en-tête de la page (le même que les autres pages) -->
+  <header class="page-header">
+    <div class="page-header-top">
+      <h1 class="page-title">
+        Courses des 4 saisons Amiens métropole <br>
+      </h1>
+      4 éditions par an depuis 1983
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- Cette balise affiche le menu horizontal (lu dans config/menuhorizontal.json) -->
+    <menu></menu>
+
+    <div id="pagePalmares">
+
+      <h2>Palmarès (nombre de victoires)</h2>
+
+      <!-- Les 3 filtres : le JavaScript recharge le tableau quand on en change un -->
+      <div class="row g-2 mb-3">
+
+        <div class="col-sm-4">
+          <label for="filtreSexe" class="form-label">Catégorie</label>
+          <select id="filtreSexe" class="form-select">
+            <option value="">Filles et garçons</option>
+            <option value="F">Filles</option>
+            <option value="M">Garçons</option>
+          </select>
+        </div>
+
+        <div class="col-sm-4">
+          <label for="filtreDistance" class="form-label">Distance</label>
+          <select id="filtreDistance" class="form-select">
+            <option value="">Toutes les distances</option>
+            <option value="5 km">5 km</option>
+            <option value="10 km">10 km</option>
+          </select>
+        </div>
+
+        <div class="col-sm-4">
+          <label for="filtreSaison" class="form-label">Saison</label>
+          <select id="filtreSaison" class="form-select">
+            <option value="">Toutes les saisons</option>
+            <option value="printemps">Printemps</option>
+            <option value="ete">Été</option>
+            <option value="automne">Automne</option>
+            <option value="hiver">Hiver</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Le tableau : les lignes sont ajoutées par index.js dans le tbody -->
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Rang</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Victoires</th>
+        </tr>
+        </thead>
+        <tbody id="lignesPalmares"></tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
